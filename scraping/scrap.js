@@ -19,7 +19,6 @@ async function ScrapeMenu() {
     await new Promise(resolve => setTimeout(resolve, 200));
   }
 
-  console.log(allItems);
   const jsonstring = JSON.stringify(allItems, null, 2);
   fs.writeFileSync('Menu.json', jsonstring);
   return jsonstring;
