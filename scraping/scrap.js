@@ -1,15 +1,27 @@
 const cheerio = require('cheerio');
 const { getMenu } = require('./scraper.js');
+const { getNutrition } = require('./nutrition.js');
 
-async function ScrapeMenu(){
-    const menu = await getMenu();
-    const $ = cheerio.load(menu);
-    const menuItems = $('a.show-nutrition');
-    menuItems.each((index, element) => {
-        const name = $(element).text();
-        const recipeId = $(element).attr('data-recipe');
-        console.log(name, recipeId);
-      });
+async function ScrapeMenu() {
+  const menu = await getMenu();
+  const $ = cheerio.load(menu);
+  const menuItems = $('a.show-nutrition').toArray();
+  const allItems = [];
+
+  for (const element of menuItems) {
+    const name = $(element).text();
+    const recipeId = $(element).attr('data-recipe');
+    const nutrition = await getNutrition(recipeId);
+
+    allItems.push({ name, recipeId, ...nutrition });
+
+    // 200ms delay between requests
+    await new Promise(resolve => setTimeout(resolve, 200));
+  }
+
+  console.log(allItems);
+  return allItems;
 }
+
 ScrapeMenu();
 module.exports = { ScrapeMenu };
