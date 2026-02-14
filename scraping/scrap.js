@@ -1,7 +1,7 @@
 const cheerio = require('cheerio');
 const { getMenu } = require('./scraper.js');
 const { getNutrition } = require('./nutrition.js');
-
+const fs = require('fs');
 async function ScrapeMenu() {
   const menu = await getMenu();
   const $ = cheerio.load(menu);
@@ -20,7 +20,9 @@ async function ScrapeMenu() {
   }
 
   console.log(allItems);
-  return allItems;
+  const jsonstring = JSON.stringify(allItems, null, 2);
+  fs.writeFileSync('Menu.json', jsonstring);
+  return jsonstring;
 }
 
 ScrapeMenu();
