@@ -8,8 +8,7 @@ const pool = new Pool({
 
 async function initDB() {
   // Drop old tables so we can recreate with correct columns
-
-  await pool.query(`
+    await pool.query(`
     CREATE TABLE IF NOT EXISTS recipes (
       recipe_id TEXT PRIMARY KEY,
       name TEXT NOT NULL,
